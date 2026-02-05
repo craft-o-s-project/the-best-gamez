@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Best Gamez</title>
+<style>
+:root {
+    --bg-primary: #000000;
+    --bg-card: #111111;
+    --bg-card-hover: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --border: #222222;
+    --transition: 0.2s ease;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+/* Navigation */
+nav {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.nav-container { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; height:60px; }
+.logo { font-size:20px; font-weight:700; color:var(--text-primary); text-decoration:none; display:flex; align-items:center; gap:10px; }
+.logo-icon { width:32px; height:32px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.nav-links { display:flex; gap:8px; }
+.nav-link { color: var(--text-secondary); text-decoration:none; padding:8px 16px; border-radius:6px; font-size:14px; font-weight:500; transition: all var(--transition); }
+.nav-link:hover, .nav-link.active { color: var(--text-primary); background: var(--bg-card-hover); }
+
+/* Main Layout */
+.main-container { max-width:1400px; margin:0 auto; padding:24px; display:grid; grid-template-columns:1fr 300px; gap:24px; }
+@media (max-width:1024px) { .main-container { grid-template-columns:1fr; } .sidebar { display:none; } }
+
+/* Header */
+.header-section { margin-bottom:32px; }
+.header-section h1 { font-size:32px; font-weight:700; margin-bottom:8px; }
+.header-section p { color:var(--text-secondary); font-size:16px; }
+
+/* Search */
+.search-container { margin-bottom:24px; }
+.search-input {
+    width:100%; padding:14px 20px; border-radius:12px; border:1px solid var(--border);
+    background: var(--bg-card); color: var(--text-primary); font-size:16px; outline:none; transition: all var(--transition);
+}
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+.search-input::placeholder { color: var(--text-secondary); }
+
+/* Category Tabs */
+.category-tabs { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+.category-tab {
+    padding:8px 16px; border-radius:20px; border:1px solid var(--border); background:transparent;
+    color:var(--text-secondary); font-size:14px; cursor:pointer; transition: all var(--transition);
+}
+.category-tab:hover { border-color:var(--accent); color:var(--text-primary); }
+.category-tab.active { background:var(--accent); border-color:var(--accent); color:var(--text-primary); }
+
+/* Games Grid */
+.games-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:16px; }
+.game-card {
+    background:var(--bg-card); border-radius:12px; overflow:hidden; cursor:pointer; transition:all var(--transition);
+    border:1px solid var(--border);
+}
+.game-card:hover { transform:translateY(-4px); background:var(--bg-card-hover); border-color:var(--accent); }
+.game-thumbnail { width:100%; aspect-ratio:16/10; background:var(--bg-primary); display:flex; align-items:center; justify-content:center; font-size:48px; color:var(--text-secondary); }
+.game-thumbnail img { width:100%; height:100%; object-fit:cover; }
+.game-info { padding:12px; }
+.game-title { font-size:14px; font-weight:600; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.game-category { font-size:12px; color:var(--text-secondary); }
+
+/* Sidebar */
+.sidebar { display:flex; flex-direction:column; gap:16px; }
+.sidebar-section { background:var(--bg-card); border-radius:12px; padding:16px; border:1px solid var(--border); }
+.sidebar-title { font-size:14px; font-weight:600; margin-bottom:12px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; }
+.popular-game { display:flex; align-items:center; gap:12px; padding:8px 0; cursor:pointer; transition:opacity var(--transition); }
+.popular-game:hover { opacity:0.8; }
+.popular-game-icon { width:40px; height:40px; background:var(--bg-primary); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.popular-game-info { flex:1; }
+.popular-game-title { font-size:14px; font-weight:500; }
+.popular-game-plays { font-size:12px; color:var(--text-secondary); }
+
+/* Empty State */
+.empty-state { text-align:center; padding:48px; color:var(--text-secondary); }
+.empty-state-icon { font-size:48px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <a href="/" class="logo">
+            <div class="logo-icon">G</div>
+            <span>The Best Gamez</span>
+        </a>
+        <div class="nav-links">
+            <a href="#" class="nav-link active" data-page="games" id="nav-games">games</a>
+            <a href="#" class="nav-link" data-page="popular" id="nav-popular">popular</a>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+    <main>
+        <div class="header-section">
+            <h1>Play Unblocked Games</h1>
+            <p>Free games with no downloads or restrictions. Just click and play.</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Search games...">
+        </div>
+
+        <div class="category-tabs" id="category-tabs">
+            <button class="category-tab active" data-category="all">All Games</button>
+        </div>
+
+        <div id="games-container">
+            <div class="loading">
+                <span>Loading games...</span>
+            </div>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Popular Games</h3>
+            <div id="popular-games"></div>
+        </div>
+    </aside>
+</div>
+
+<footer>
+    <p>The Best Gamez - Play free games online</p>
+</footer>
+
+<script>
+const GAMES_JSON_URL = '/games.json';
+let allGames = [];
+let currentCategory = 'all';
+let searchQuery = '';
+
+const gamesContainer = document.getElementById('games-container');
+const categoryTabs = document.getElementById('category-tabs');
+const searchInput = document.getElementById('search-input');
+const popularGamesContainer = document.getElementById('popular-games');
+
+async function fetchGames() {
+    try {
+        const response = await fetch(GAMES_JSON_URL);
+        if (!response.ok) throw new Error('Failed to load games');
+        const data = await response.json();
+        allGames = data.games || [];
+
+        renderCategories();
+        renderGames();
+        renderPopularGames();
+    } catch (error) {
+        gamesContainer.innerHTML = `<div class="empty-state">
+            <div class="empty-state-icon">!</div>
+            <h3>Unable to load games</h3>
+            <p>Check games.json URL: ${GAMES_JSON_URL}</p>
+        </div>`;
+    }
+}
+
+function getCategories() {
+    const categories = new Set();
+    allGames.forEach(game => game.category && categories.add(game.category));
+    return Array.from(categories).sort();
+}
+
+function renderCategories() {
+    const categories = getCategories();
+    let html = '<button class="category-tab active" data-category="all">All Games</button>';
+    categories.forEach(cat => html += `<button class="category-tab" data-category="${cat}">${cat}</button>`);
+    categoryTabs.innerHTML = html;
+    categoryTabs.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            categoryTabs.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentCategory = tab.dataset.category;
+            renderGames();
+        });
+    });
+}
+
+function filterGames() {
+    return allGames.filter(game => {
+        const matchesCategory = currentCategory === 'all' || game.category === currentCategory;
+        const matchesSearch = !searchQuery || game.title.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+}
+
+function renderGames() {
+    const games = filterGames();
+    if (games.length === 0) {
+        gamesContainer.innerHTML = `<div class="empty-state">
+            <div class="empty-state-icon">:(</div>
+            <h3>No games found</h3>
+        </div>`;
+        return;
+    }
+
+    // Calculate items per row dynamically
+    const tempGrid = document.createElement('div');
+    tempGrid.style.display = 'grid';
+    tempGrid.style.gridTemplateColumns = getComputedStyle(gamesContainer.querySelector('.games-grid') || document.body).gridTemplateColumns;
+    document.body.appendChild(tempGrid);
+    const itemsPerRow = tempGrid.clientWidth / 180 | 0; // approximate 180px min width
+    document.body.removeChild(tempGrid);
+
+    let html = '<div class="games-grid">';
+    games.forEach((game, index) => {
+        const thumb = game.thumbnail ? `<img src="${game.thumbnail}" alt="${game.title}" loading="lazy">` : game.icon || 'G';
+        html += `<div class="game-card" data-url="${game.url}" data-title="${game.title}">
+            <div class="game-thumbnail">${game.thumbnail ? thumb : `<span>${thumb}</span>`}</div>
+            <div class="game-info">
+                <div class="game-title">${game.title}</div>
+                <div class="game-category">${game.category||'Uncategorized'}</div>
+            </div>
+        </div>`;
+
+        // Insert menu banner every 3 full rows
+        if (itemsPerRow && (index + 1) % (3 * itemsPerRow) === 0 && index < games.length - 1) {
+            html += `<div class="banner-ad menu-banner">
+                <div class="banner-ad-placeholder">
+                    <div class="ad-label">Sponsored</div>
+                    <p>Advertisement</p>
+                </div>
+            </div>`;
+        }
+    });
+    html += '</div>';
+    gamesContainer.innerHTML = html;
+
+    // Add click listeners to game cards
+    gamesContainer.querySelectorAll('.game-card').forEach(card => {
+        card.addEventListener('click', () => alert(`Open game: ${card.dataset.title}`));
+    });
+}
+
+
+function renderPopularGames() {
+    const popular = allGames.filter(g => g.popular).slice(0,5);
+    let html = '';
+    popular.forEach(game => {
+        html += `<div class="popular-game" data-url="${game.url}" data-title="${game.title}">
+            <div class="popular-game-icon">${game.icon || 'G'}</div>
+            <div class="popular-game-info">
+                <div class="popular-game-title">${game.title}</div>
+                <div class="popular-game-plays">${game.category || 'Game'}</div>
+            </div>
+        </div>`;
+    });
+    popularGamesContainer.innerHTML = html;
+    popularGamesContainer.querySelectorAll('.popular-game').forEach(item => {
+        item.addEventListener('click', () => alert(`Open game: ${item.dataset.title}`));
+    });
+}
+
+searchInput.addEventListener('input', e => { searchQuery = e.target.value; renderGames(); });
+
+document.addEventListener('DOMContentLoaded', fetchGames);
+</script>
+</body>
+</html>
