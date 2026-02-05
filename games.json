@@ -1,0 +1,9 @@
+{
+  "games": [
+    {
+      "path": "games/example",
+      "text": "example",
+      "popular": true
+    },
+  ]
+}
